@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: envArch
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/envarchdb}
+
+server:
+  port: ${PORT:8080}
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:9a2f64a13e5f2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b}
+    expiration-ms: ${JWT_EXPIRATION_MS:86400000} # 24 hours
+  upload:
+    dir: ${UPLOAD_DIR:./uploads}

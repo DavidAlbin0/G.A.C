@@ -1,0 +1,9 @@
+spring:
+  application:
+    name: audit
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/auditdb}
+
+server:
+  port: ${PORT:8082}

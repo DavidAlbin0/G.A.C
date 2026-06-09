@@ -1,0 +1,22 @@
+server:
+  port: 8083
+
+spring:
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/xmlendsdb}
+  servlet:
+    multipart:
+      max-file-size: 10MB
+      max-request-size: 20MB
+
+app:
+  jwt:
+    secret: ${JWT_SECRET:9a2f64a13e5f2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b}
+  upload:
+    dir: ${UPLOAD_DIR:./uploads_xmlends}
+  gemini:
+    url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
+    key: ${GEMINI_API_KEY:}
+  backend:
+    url: ${BACKEND_URL:http://backend:8080}

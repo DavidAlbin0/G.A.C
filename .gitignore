@@ -1,0 +1,36 @@
+# --- IDEs y editores ---
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# --- Sistema Operativo ---
+.DS_Store
+Thumbs.db
+
+# --- Frontend (Node / Next.js / React) ---
+**/node_modules/
+**/dist/
+**/.next/
+**/out/
+**/build/
+**/.npm
+**/.yarn/
+
+# --- Backend (Spring Boot / Gradle / Java) ---
+**/.gradle/
+**/build/
+**/bin/
+**/out/
+**/.gradle_home/
+
+# --- Docker y variables de entorno (¡Seguridad!) ---
+**/*.env
+**/*.env.local
+**/.env.*.local
+
+# --- Tu carpeta específica de subidas temporales ---
+/uploads/
