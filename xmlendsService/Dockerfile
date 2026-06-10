@@ -17,6 +17,6 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 
 # Exponer el puerto del microservicio de XMLends
-EXPOSE 8083
+EXPOSE 10102
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

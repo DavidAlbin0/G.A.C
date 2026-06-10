@@ -1,5 +1,5 @@
-// URL base de la API (apunta al API Gateway en puerto 8000, o por defecto a Spring Boot en 8080)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
+// URL base de la API (apunta al API Gateway en puerto 8000, o por defecto a Spring Boot en 10100)
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:10100";
 
 export const API_ROUTES = {
   // Servicio 1: Autenticación (Spring Boot)

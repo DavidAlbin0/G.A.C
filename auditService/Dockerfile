@@ -17,6 +17,6 @@ WORKDIR /app
 COPY --from=build /app/build/libs/*.jar app.jar
 
 # Exponer el puerto del microservicio de Auditoría
-EXPOSE 8082
+EXPOSE 10101
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

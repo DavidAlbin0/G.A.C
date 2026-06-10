@@ -1,10 +1,10 @@
 server:
-  port: 8083
+  port: 10102
 
 spring:
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/xmlendsdb}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:29018/xmlendsdb}
   servlet:
     multipart:
       max-file-size: 10MB
@@ -19,4 +19,4 @@ app:
     url: https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent
     key: ${GEMINI_API_KEY:}
   backend:
-    url: ${BACKEND_URL:http://backend:8080}
+    url: ${BACKEND_URL:http://backend:10100}

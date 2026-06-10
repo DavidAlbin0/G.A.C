@@ -3,10 +3,10 @@ spring:
     name: envArch
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/envarchdb}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:29018/envarchdb}
 
 server:
-  port: ${PORT:8080}
+  port: ${PORT:10100}
 
 app:
   jwt:

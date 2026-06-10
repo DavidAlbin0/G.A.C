@@ -4,8 +4,9 @@ services:
     container_name: mongodb_envarch
     # Reinicia automáticamente al arrancar Docker o tras fallos, excepto si se detuvo manualmente
     restart: unless-stopped
+    command: mongod --port 29018
     ports:
-      - "127.0.0.1:27018:27017"
+      - "127.0.0.1:29018:29018"
     volumes:
       - mongo_data:/data/db
     networks:
@@ -19,10 +20,10 @@ services:
     # Reinicia automáticamente al arrancar Docker o tras fallos, excepto si se detuvo manualmente
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8080:8080"
+      - "127.0.0.1:10100:10100"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/envarchdb
-      - PORT=8080
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:29018/envarchdb
+      - PORT=10100
       - JWT_SECRET=9a2f64a13e5f2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b
       - UPLOAD_DIR=/app/uploads
     depends_on:
@@ -56,10 +57,10 @@ services:
     # Reinicia automáticamente al arrancar Docker o tras fallos, excepto si se detuvo manualmente
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8082:8082"
+      - "127.0.0.1:10101:10101"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/auditdb
-      - PORT=8082
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:29018/auditdb
+      - PORT=10101
     depends_on:
       - mongodb
     networks:
@@ -73,10 +74,10 @@ services:
     # Reinicia automáticamente al arrancar Docker o tras fallos, excepto si se detuvo manualmente
     restart: unless-stopped
     ports:
-      - "127.0.0.1:8083:8083"
+      - "127.0.0.1:10102:10102"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/xmlendsdb
-      - PORT=8083
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:29018/xmlendsdb
+      - PORT=10102
       - JWT_SECRET=9a2f64a13e5f2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b
       - UPLOAD_DIR=/app/uploads_xmlends
       - GEMINI_API_KEY=${GEMINI_API_KEY}

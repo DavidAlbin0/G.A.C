@@ -14,7 +14,7 @@ public class AuditClient {
     private final HttpClient httpClient;
     private final String auditServiceUrl;
 
-    public AuditClient(@Value("${app.audit.service-url:http://audit-service:8082/api/audit}") String auditServiceUrl) {
+    public AuditClient(@Value("${app.audit.service-url:http://audit-service:10101/api/audit}") String auditServiceUrl) {
         this.httpClient = HttpClient.newHttpClient();
         this.auditServiceUrl = auditServiceUrl;
     }

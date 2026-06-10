@@ -8,6 +8,9 @@ COPY gradlew /app/gradlew
 COPY settings.gradle.kts /app/settings.gradle.kts
 COPY build.gradle.kts /app/build.gradle.kts
 
+# Asegurar permisos de ejecución para gradlew
+RUN chmod +x /app/gradlew
+
 # Descargar dependencias para aprovechar la caché de Docker
 RUN ./gradlew dependencies --no-daemon || true
 
@@ -26,6 +29,6 @@ COPY --from=build /app/build/libs/*.jar app.jar
 RUN mkdir -p /app/uploads
 
 # Exponer el puerto de Spring Boot
-EXPOSE 8080
+EXPOSE 10100
 
 ENTRYPOINT ["java", "-jar", "app.jar"]

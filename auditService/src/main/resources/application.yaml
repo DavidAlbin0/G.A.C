@@ -3,7 +3,7 @@ spring:
     name: audit
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:27017/auditdb}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://localhost:29018/auditdb}
 
 server:
-  port: ${PORT:8082}
+  port: ${PORT:10101}
