@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../components/AuthProvider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { API_BASE_URL } from "../../../utils/apiRoutes";
 
 interface Factura {
   id: string;
@@ -90,7 +91,7 @@ export default function XmlendsDashboardPage() {
     setPeriodError("");
     setPeriodSuccess("");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/ejercicios`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/ejercicios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -123,7 +124,7 @@ export default function XmlendsDashboardPage() {
     setAppealError("");
     setAppealSuccess("");
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/factura/${appealingFacturaId}/apelar`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/factura/${appealingFacturaId}/apelar`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -153,7 +154,7 @@ export default function XmlendsDashboardPage() {
   const fetchFacturas = async () => {
     if (!token) return;
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/mis-facturas`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/mis-facturas`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -198,7 +199,7 @@ export default function XmlendsDashboardPage() {
       formData.append("xml", newXmlFile);
       formData.append("pdf", newPdfFile);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/factura/${replacingFacturaId}/reemplazar`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/factura/${replacingFacturaId}/reemplazar`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,

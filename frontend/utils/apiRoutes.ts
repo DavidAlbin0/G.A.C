@@ -1,5 +1,24 @@
-// URL base de la API (apunta al API Gateway en puerto 8000, o por defecto a Spring Boot en 10100)
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:10100";
+// Determinar dinámicamente la URL base del backend/API Gateway en el cliente
+const getApiBaseUrl = () => {
+  // Si estamos del lado del servidor (SSR), usamos la variable de entorno o localhost
+  if (typeof window === "undefined") {
+    return process.env.NEXT_PUBLIC_API_URL || "http://localhost:10100";
+  }
+  
+  // Si estamos del lado del cliente (navegador):
+  const envUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  // Si la variable está definida y no es localhost, la usamos
+  if (envUrl && !envUrl.includes("localhost")) {
+    return envUrl;
+  }
+  
+  // De lo contrario, usamos el protocolo y host actuales apuntando al puerto 8000 (Gateway)
+  return `${window.location.protocol}//${window.location.hostname}:8000`;
+};
+
+export const API_BASE_URL = getApiBaseUrl();
+
 
 export const API_ROUTES = {
   // Servicio 1: Autenticación (Spring Boot)

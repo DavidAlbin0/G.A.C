@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../../../components/AuthProvider";
 import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
-import { API_ROUTES } from "../../../../../utils/apiRoutes";
+import { API_ROUTES, API_BASE_URL } from "../../../../../utils/apiRoutes";
 
 interface Factura {
   id: string;
@@ -72,10 +72,10 @@ export default function RevisarFacturaPage() {
   const fetchData = async () => {
     if (!token || !id) return;
     try {
-      const resFactura = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/factura/${id}`, {
+      const resFactura = await fetch(`${API_BASE_URL}/api/xmlends/factura/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
-      const resEjercicios = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/ejercicios`, {
+      const resEjercicios = await fetch(`${API_BASE_URL}/api/xmlends/ejercicios`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -120,7 +120,7 @@ export default function RevisarFacturaPage() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/factura/${id}/revisar`, {
+      const res = await fetch(`${API_BASE_URL}/api/xmlends/factura/${id}/revisar`, {
         method: "PUT",
         headers: { 
           "Content-Type": "application/json",

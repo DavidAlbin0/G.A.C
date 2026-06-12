@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../../components/AuthProvider";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { API_ROUTES } from "../../../utils/apiRoutes";
+import { API_ROUTES, API_BASE_URL } from "../../../utils/apiRoutes";
 
 interface Factura {
   id: string;
@@ -97,13 +97,13 @@ export default function XmlendsAdminPage() {
   const fetchAdminData = async () => {
     if (!token) return;
     try {
-      const resSummary = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/admin/resumen`, {
+      const resSummary = await fetch(`${API_BASE_URL}/api/xmlends/admin/resumen`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
       const resCompanies = await fetch(API_ROUTES.auth.empresas);
-      const resEjercicios = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/ejercicios`, {
+      const resEjercicios = await fetch(`${API_BASE_URL}/api/xmlends/ejercicios`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
@@ -154,7 +154,7 @@ export default function XmlendsAdminPage() {
     setSubmittingForm(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/ejercicios`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/ejercicios`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -185,7 +185,7 @@ export default function XmlendsAdminPage() {
   const handleDeleteFactura = async (id: string) => {
     if (!confirm("¿Estás seguro de eliminar esta factura? Esto borrará el archivo y los datos permanentemente.")) return;
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/factura/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/api/xmlends/factura/${id}`, {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
       });

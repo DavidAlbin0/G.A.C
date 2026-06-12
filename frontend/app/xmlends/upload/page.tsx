@@ -3,7 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useAuth } from "../../../components/AuthProvider";
 import { useRouter } from "next/navigation";
-import { API_ROUTES } from "../../../utils/apiRoutes";
+import { API_ROUTES, API_BASE_URL } from "../../../utils/apiRoutes";
 import Link from "next/link";
 
 export default function XmlendsUploadPage() {
@@ -39,7 +39,7 @@ export default function XmlendsUploadPage() {
     const fetchEjercicios = async () => {
       if (!token) return;
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/ejercicios`, {
+        const response = await fetch(`${API_BASE_URL}/api/xmlends/ejercicios`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -108,7 +108,7 @@ export default function XmlendsUploadPage() {
       formData.append("pdf", pdfFile);
       formData.append("ejercicioId", selectedEjercicioId);
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000"}/api/xmlends/upload`, {
+      const response = await fetch(`${API_BASE_URL}/api/xmlends/upload`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
