@@ -5,15 +5,11 @@ import com.micSer.envArch.domain.repository.UserRepositoryPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import java.util.Set;
 
+@lombok.RequiredArgsConstructor
 public class RegisterUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
     private final PasswordEncoder passwordEncoder;
-
-    public RegisterUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder) {
-        this.userRepositoryPort = userRepositoryPort;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public User execute(String username, String email, String password, String rfc, String empresaId, String role) {
         if (email == null || !email.toLowerCase().endsWith("@grupo-sacmag.com.mx")) {

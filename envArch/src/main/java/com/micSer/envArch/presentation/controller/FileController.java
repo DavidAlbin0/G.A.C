@@ -23,6 +23,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/files")
+@lombok.RequiredArgsConstructor
 public class FileController {
 
     private final UploadFileUseCase uploadFileUseCase;
@@ -34,27 +35,6 @@ public class FileController {
     private final UserRepositoryPort userRepositoryPort;
     private final BinaryFileParserService binaryFileParserService;
     private final AuditClient auditClient;
-
-    public FileController(
-            UploadFileUseCase uploadFileUseCase,
-            GetFilesUseCase getFilesUseCase,
-            RenameFileUseCase renameFileUseCase,
-            ReplaceFileUseCase replaceFileUseCase,
-            DeleteFileUseCase deleteFileUseCase,
-            DownloadFileUseCase downloadFileUseCase,
-            UserRepositoryPort userRepositoryPort,
-            BinaryFileParserService binaryFileParserService,
-            AuditClient auditClient) {
-        this.uploadFileUseCase = uploadFileUseCase;
-        this.getFilesUseCase = getFilesUseCase;
-        this.renameFileUseCase = renameFileUseCase;
-        this.replaceFileUseCase = replaceFileUseCase;
-        this.deleteFileUseCase = deleteFileUseCase;
-        this.downloadFileUseCase = downloadFileUseCase;
-        this.userRepositoryPort = userRepositoryPort;
-        this.binaryFileParserService = binaryFileParserService;
-        this.auditClient = auditClient;
-    }
 
     private User getCurrentUser() {
         String username = (String) SecurityContextHolder.getContext().getAuthentication().getPrincipal();

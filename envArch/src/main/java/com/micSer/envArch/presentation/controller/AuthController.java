@@ -21,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
+@lombok.RequiredArgsConstructor
 public class AuthController {
 
     private final LoginUseCase loginUseCase;
@@ -29,21 +30,6 @@ public class AuthController {
     private final JwtTokenProvider jwtTokenProvider;
     private final UserRepositoryPort userRepositoryPort;
     private final EmpresaRepositoryPort empresaRepositoryPort;
-
-    public AuthController(
-            LoginUseCase loginUseCase,
-            RegisterUseCase registerUseCase,
-            ChangePasswordUseCase changePasswordUseCase,
-            JwtTokenProvider jwtTokenProvider,
-            UserRepositoryPort userRepositoryPort,
-            EmpresaRepositoryPort empresaRepositoryPort) {
-        this.loginUseCase = loginUseCase;
-        this.registerUseCase = registerUseCase;
-        this.changePasswordUseCase = changePasswordUseCase;
-        this.jwtTokenProvider = jwtTokenProvider;
-        this.userRepositoryPort = userRepositoryPort;
-        this.empresaRepositoryPort = empresaRepositoryPort;
-    }
 
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {

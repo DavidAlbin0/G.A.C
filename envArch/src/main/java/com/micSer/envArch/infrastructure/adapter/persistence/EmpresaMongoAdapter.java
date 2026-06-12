@@ -8,13 +8,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@lombok.RequiredArgsConstructor
 public class EmpresaMongoAdapter implements EmpresaRepositoryPort {
 
     private final EmpresaMongoRepository repository;
-
-    public EmpresaMongoAdapter(EmpresaMongoRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public Optional<Empresa> findById(String id) {

@@ -7,15 +7,11 @@ import com.micSer.envArch.domain.repository.FileStoragePort;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 
+@lombok.RequiredArgsConstructor
 public class ReplaceFileUseCase {
 
     private final FileRepositoryPort fileRepositoryPort;
     private final FileStoragePort fileStoragePort;
-
-    public ReplaceFileUseCase(FileRepositoryPort fileRepositoryPort, FileStoragePort fileStoragePort) {
-        this.fileRepositoryPort = fileRepositoryPort;
-        this.fileStoragePort = fileStoragePort;
-    }
 
     public FileMetadata execute(String fileId, String userId, String fileName, long fileSize, String contentType, InputStream inputStream) {
         FileMetadata existingMetadata = fileRepositoryPort.findById(fileId)

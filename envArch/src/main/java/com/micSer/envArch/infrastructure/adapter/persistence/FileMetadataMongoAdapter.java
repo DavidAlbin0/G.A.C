@@ -8,13 +8,10 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Component
+@lombok.RequiredArgsConstructor
 public class FileMetadataMongoAdapter implements FileRepositoryPort {
 
     private final FileMetadataMongoRepository repository;
-
-    public FileMetadataMongoAdapter(FileMetadataMongoRepository repository) {
-        this.repository = repository;
-    }
 
     @Override
     public FileMetadata save(FileMetadata fileMetadata) {

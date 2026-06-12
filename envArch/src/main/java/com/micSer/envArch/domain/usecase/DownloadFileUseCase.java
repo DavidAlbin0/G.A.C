@@ -6,15 +6,11 @@ import com.micSer.envArch.domain.repository.FileStoragePort;
 
 import java.io.InputStream;
 
+@lombok.RequiredArgsConstructor
 public class DownloadFileUseCase {
 
     private final FileRepositoryPort fileRepositoryPort;
     private final FileStoragePort fileStoragePort;
-
-    public DownloadFileUseCase(FileRepositoryPort fileRepositoryPort, FileStoragePort fileStoragePort) {
-        this.fileRepositoryPort = fileRepositoryPort;
-        this.fileStoragePort = fileStoragePort;
-    }
 
     public InputStream execute(String fileId, String userId) {
         FileMetadata metadata = fileRepositoryPort.findById(fileId)

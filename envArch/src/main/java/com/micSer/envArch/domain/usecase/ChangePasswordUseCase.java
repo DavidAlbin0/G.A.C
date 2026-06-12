@@ -4,15 +4,11 @@ import com.micSer.envArch.domain.model.User;
 import com.micSer.envArch.domain.repository.UserRepositoryPort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+@lombok.RequiredArgsConstructor
 public class ChangePasswordUseCase {
 
     private final UserRepositoryPort userRepositoryPort;
     private final PasswordEncoder passwordEncoder;
-
-    public ChangePasswordUseCase(UserRepositoryPort userRepositoryPort, PasswordEncoder passwordEncoder) {
-        this.userRepositoryPort = userRepositoryPort;
-        this.passwordEncoder = passwordEncoder;
-    }
 
     public void execute(String username, String oldPassword, String newPassword) {
         User user = userRepositoryPort.findByUsername(username)

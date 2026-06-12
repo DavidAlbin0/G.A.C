@@ -8,15 +8,11 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
+@lombok.RequiredArgsConstructor
 public class UploadFileUseCase {
 
     private final FileRepositoryPort fileRepositoryPort;
     private final FileStoragePort fileStoragePort;
-
-    public UploadFileUseCase(FileRepositoryPort fileRepositoryPort, FileStoragePort fileStoragePort) {
-        this.fileRepositoryPort = fileRepositoryPort;
-        this.fileStoragePort = fileStoragePort;
-    }
 
     public FileMetadata execute(String fileName, long fileSize, String contentType, String userId, InputStream inputStream) {
         // 1. Store the file physically

@@ -6,13 +6,10 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Component
+@lombok.RequiredArgsConstructor
 public class UserMongoAdapter implements UserRepositoryPort {
 
     private final UserMongoRepository userMongoRepository;
-
-    public UserMongoAdapter(UserMongoRepository userMongoRepository) {
-        this.userMongoRepository = userMongoRepository;
-    }
 
     @Override
     public Optional<User> findByUsername(String username) {

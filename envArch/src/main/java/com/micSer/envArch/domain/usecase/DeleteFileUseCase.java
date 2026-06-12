@@ -4,15 +4,11 @@ import com.micSer.envArch.domain.model.FileMetadata;
 import com.micSer.envArch.domain.repository.FileRepositoryPort;
 import com.micSer.envArch.domain.repository.FileStoragePort;
 
+@lombok.RequiredArgsConstructor
 public class DeleteFileUseCase {
 
     private final FileRepositoryPort fileRepositoryPort;
     private final FileStoragePort fileStoragePort;
-
-    public DeleteFileUseCase(FileRepositoryPort fileRepositoryPort, FileStoragePort fileStoragePort) {
-        this.fileRepositoryPort = fileRepositoryPort;
-        this.fileStoragePort = fileStoragePort;
-    }
 
     public void execute(String fileId, String userId) {
         FileMetadata metadata = fileRepositoryPort.findById(fileId)

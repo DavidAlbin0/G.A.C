@@ -5,13 +5,10 @@ import com.micSer.envArch.domain.repository.FileRepositoryPort;
 
 import java.util.List;
 
+@lombok.RequiredArgsConstructor
 public class GetFilesUseCase {
 
     private final FileRepositoryPort fileRepositoryPort;
-
-    public GetFilesUseCase(FileRepositoryPort fileRepositoryPort) {
-        this.fileRepositoryPort = fileRepositoryPort;
-    }
 
     public List<FileMetadata> execute(String userId) {
         return fileRepositoryPort.findByUserId(userId);
