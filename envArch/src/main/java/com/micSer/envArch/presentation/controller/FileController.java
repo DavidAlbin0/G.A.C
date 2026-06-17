@@ -16,6 +16,11 @@ import org.springframework.web.multipart.MultipartFile;
 import com.micSer.envArch.infrastructure.service.BinaryFileParserService;
 import com.micSer.envArch.infrastructure.client.AuditClient;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -23,6 +28,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api/files")
+@Tag(name = "Archivos", description = "Endpoints para la gestión física y lógica de archivos (subir, listar, renombrar, reemplazar, eliminar y descargar)")
 @lombok.RequiredArgsConstructor
 public class FileController {
 
@@ -46,8 +52,14 @@ public class FileController {
         return user;
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<FileMetadata> uploadFile(@RequestParam("file") MultipartFile file) throws IOException {
+    @PostMapping(value = "/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Subir un nuevo archivo", description = "Guarda físicamente el archivo en el storage y registra sus metadatos en la base de datos.")
+    @ApiResponse(responseCode = "200", description = "Archivo subido y registrado exitosamente")
+    @ApiResponse(responseCode = "403", description = "Acceso denegado. Rol insuficiente.")
+    public ResponseEntity<FileMetadata> uploadFile(
+            @RequestParam("file") 
+            @Parameter(description = "Archivo físico a subir") MultipartFile file
+    ) throws IOException {
         User user = getCurrentUser();
         FileMetadata metadata = uploadFileUseCase.execute(
                 file.getOriginalFilename(),
@@ -61,6 +73,9 @@ public class FileController {
     }
 
     @GetMapping
+    @Operation(summary = "Listar archivos del usuario", description = "Recupera la lista de todos los metadatos de archivos que pertenecen al usuario autenticado.")
+    @ApiResponse(responseCode = "200", description = "Lista de metadatos obtenida con éxito")
+    @ApiResponse(responseCode = "403", description = "Acceso denegado. Rol insuficiente.")
     public ResponseEntity<List<FileMetadata>> listFiles() {
         User user = getCurrentUser();
         List<FileMetadata> files = getFilesUseCase.execute(user.getId());
@@ -68,9 +83,18 @@ public class FileController {
     }
 
     @PutMapping("/{id}/rename")
+    @Operation(summary = "Renombrar archivo", description = "Actualiza el nombre lógico de un archivo por ID, validando que el usuario autenticado sea el propietario.")
+    @ApiResponse(responseCode = "200", description = "Archivo renombrado exitosamente")
+    @ApiResponse(responseCode = "400", description = "El nombre del archivo es obligatorio o inválido")
+    @ApiResponse(responseCode = "403", description = "No autorizado para renombrar el archivo")
+    @ApiResponse(responseCode = "404", description = "Archivo no encontrado")
     public ResponseEntity<FileMetadata> renameFile(
-            @PathVariable("id") String id,
-            @RequestBody Map<String, String> body) {
+            @PathVariable("id") 
+            @Parameter(description = "ID único del archivo") String id,
+            
+            @RequestBody 
+            @Parameter(description = "Cuerpo JSON con el nuevo nombre (clave: 'newFileName')") Map<String, String> body
+    ) {
         User user = getCurrentUser();
         String newName = body.get("newFileName");
         if (newName == null || newName.trim().isEmpty()) {
@@ -81,10 +105,18 @@ public class FileController {
         return ResponseEntity.ok(updated);
     }
 
-    @PutMapping("/{id}/replace")
+    @PutMapping(value = "/{id}/replace", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @Operation(summary = "Reemplazar contenido de un archivo", description = "Actualiza el archivo físico en disco y actualiza sus dimensiones/fechas de metadatos en base de datos.")
+    @ApiResponse(responseCode = "200", description = "Contenido del archivo reemplazado exitosamente")
+    @ApiResponse(responseCode = "403", description = "No autorizado para modificar el archivo")
+    @ApiResponse(responseCode = "404", description = "Archivo no encontrado")
     public ResponseEntity<FileMetadata> replaceFile(
-            @PathVariable("id") String id,
-            @RequestParam("file") MultipartFile file) throws IOException {
+            @PathVariable("id") 
+            @Parameter(description = "ID del archivo a reemplazar") String id,
+            
+            @RequestParam("file") 
+            @Parameter(description = "Nuevo archivo físico que reemplazará al anterior") MultipartFile file
+    ) throws IOException {
         User user = getCurrentUser();
         FileMetadata updated = replaceFileUseCase.execute(
                 id,
@@ -99,7 +131,14 @@ public class FileController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Map<String, String>> deleteFile(@PathVariable("id") String id) {
+    @Operation(summary = "Eliminar archivo", description = "Borra físicamente el archivo del disco y remueve su registro de metadatos de la base de datos.")
+    @ApiResponse(responseCode = "200", description = "Archivo eliminado exitosamente")
+    @ApiResponse(responseCode = "403", description = "No autorizado para eliminar el archivo")
+    @ApiResponse(responseCode = "404", description = "Archivo no encontrado")
+    public ResponseEntity<Map<String, String>> deleteFile(
+            @PathVariable("id") 
+            @Parameter(description = "ID del archivo a eliminar") String id
+    ) {
         User user = getCurrentUser();
         deleteFileUseCase.execute(id, user.getId());
         auditClient.logEvent(user.getUsername(), "DELETE", "Eliminó archivo con ID: " + id);
@@ -107,7 +146,14 @@ public class FileController {
     }
 
     @GetMapping("/{id}/view")
-    public ResponseEntity<?> viewFile(@PathVariable("id") String id) {
+    @Operation(summary = "Descargar o visualizar archivo", description = "Retorna el flujo de bytes del archivo. Si es un archivo binario de sistema (.dat, .isr, .sub, etc.), lo analiza y retorna la estructura analizada en JSON.")
+    @ApiResponse(responseCode = "200", description = "Flujo de bytes del archivo o JSON analizado")
+    @ApiResponse(responseCode = "403", description = "No autorizado para acceder al archivo")
+    @ApiResponse(responseCode = "404", description = "Archivo no encontrado")
+    public ResponseEntity<?> viewFile(
+            @PathVariable("id") 
+            @Parameter(description = "ID del archivo a visualizar o descargar") String id
+    ) {
         User user = getCurrentUser();
         InputStream inputStream = downloadFileUseCase.execute(id, user.getId());
         FileMetadata metadata = downloadFileUseCase.getMetadata(id, user.getId());

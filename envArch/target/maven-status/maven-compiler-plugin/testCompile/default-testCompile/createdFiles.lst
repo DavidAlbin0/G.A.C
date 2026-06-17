@@ -1,0 +1,10 @@
+com\micSer\envArch\domain\usecase\UploadFileUseCaseTest.class
+com\micSer\envArch\domain\usecase\GetFilesUseCaseTest.class
+com\micSer\envArch\domain\usecase\RegisterUseCaseTest.class
+com\micSer\envArch\domain\usecase\DeleteFileUseCaseTest.class
+com\micSer\envArch\domain\usecase\LoginUseCaseTest.class
+com\micSer\envArch\EnvArchApplicationTests.class
+com\micSer\envArch\domain\usecase\RenameFileUseCaseTest.class
+com\micSer\envArch\domain\usecase\ReplaceFileUseCaseTest.class
+com\micSer\envArch\domain\usecase\ChangePasswordUseCaseTest.class
+com\micSer\envArch\domain\usecase\DownloadFileUseCaseTest.class
