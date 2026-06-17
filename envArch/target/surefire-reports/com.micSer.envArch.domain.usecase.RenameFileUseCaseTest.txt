@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.micSer.envArch.domain.usecase.RenameFileUseCaseTest
+-------------------------------------------------------------------------------
+Tests run: 3, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 3.120 s -- in com.micSer.envArch.domain.usecase.RenameFileUseCaseTest

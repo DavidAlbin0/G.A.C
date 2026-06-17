@@ -1,17 +1,22 @@
 package com.micSer.envArch.domain.usecase;
 
+import com.micSer.envArch.domain.model.FileMetadata;
 import com.micSer.envArch.domain.repository.FileRepositoryPort;
 import com.micSer.envArch.domain.repository.FileStoragePort;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
+@DisplayName("Pruebas para DeleteFileUseCase")
 class DeleteFileUseCaseTest {
 
     @Mock
@@ -24,7 +29,72 @@ class DeleteFileUseCaseTest {
     private DeleteFileUseCase deleteFileUseCase;
 
     @Test
-    void execute_ShouldSucceed_WhenValidInput() {
-        // TODO: Implement unit test for DeleteFileUseCase
+    @DisplayName("Debería lanzar excepción si el archivo a eliminar no existe")
+    void execute_ShouldThrowException_WhenFileNotFound() {
+        // GIVEN: El ID de archivo no existe
+        String fileId = "file-123";
+        String userId = "user-abc";
+        when(fileRepositoryPort.findById(fileId)).thenReturn(Optional.empty());
+
+        // WHEN & THEN: Verificamos error
+        RuntimeException excepcion = assertThrows(RuntimeException.class, () -> {
+            deleteFileUseCase.execute(fileId, userId);
+        });
+
+        assertEquals("Archivo no encontrado", excepcion.getMessage());
+
+        // Verificamos que NUNCA intentó borrar físicamente ni de la base de datos
+        verify(fileStoragePort, never()).delete(anyString());
+        verify(fileRepositoryPort, never()).deleteById(anyString());
+    }
+
+    @Test
+    @DisplayName("Debería lanzar excepción de seguridad si el usuario no es el dueño del archivo")
+    void execute_ShouldThrowSecurityException_WhenUserIsNotOwner() {
+        // GIVEN: El archivo existe pero el dueño es otro usuario ("user-otro")
+        String fileId = "file-123";
+        String userId = "user-abc";
+        FileMetadata metadata = FileMetadata.builder()
+                .id(fileId)
+                .userId("user-otro")
+                .filePath("/uploads/user-otro/test.txt")
+                .build();
+
+        when(fileRepositoryPort.findById(fileId)).thenReturn(Optional.of(metadata));
+
+        // WHEN & THEN: Verificamos error de seguridad
+        SecurityException excepcion = assertThrows(SecurityException.class, () -> {
+            deleteFileUseCase.execute(fileId, userId);
+        });
+
+        assertEquals("No estás autorizado para eliminar este archivo", excepcion.getMessage());
+
+        // Verificamos que NUNCA se borró nada
+        verify(fileStoragePort, never()).delete(anyString());
+        verify(fileRepositoryPort, never()).deleteById(anyString());
+    }
+
+    @Test
+    @DisplayName("Debería eliminar el archivo física y lógicamente de forma exitosa")
+    void execute_ShouldDeleteFileSuccessfully_WhenUserIsOwnerAndFileExists() {
+        // GIVEN: El archivo existe y el usuario actual es el dueño
+        String fileId = "file-123";
+        String userId = "user-abc";
+        String filePath = "/uploads/user-abc/test.txt";
+        FileMetadata metadata = FileMetadata.builder()
+                .id(fileId)
+                .userId(userId)
+                .filePath(filePath)
+                .build();
+
+        when(fileRepositoryPort.findById(fileId)).thenReturn(Optional.of(metadata));
+
+        // WHEN: Ejecutamos el caso de uso (y nos aseguramos de que no lanza excepciones)
+        assertDoesNotThrow(() -> deleteFileUseCase.execute(fileId, userId));
+
+        // THEN: Verificamos que se hayan llamado las funciones correspondientes de eliminación
+        verify(fileRepositoryPort, times(1)).findById(fileId);
+        verify(fileStoragePort, times(1)).delete(filePath);
+        verify(fileRepositoryPort, times(1)).deleteById(fileId);
     }
 }
