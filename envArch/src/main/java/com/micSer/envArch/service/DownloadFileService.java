@@ -34,4 +34,15 @@ public class DownloadFileService {
 
         return metadata;
     }
+
+    public InputStream executePublic(String fileId) {
+        FileMetadata metadata = fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new RuntimeException("Archivo no encontrado con ID: " + fileId));
+        return fileStorageService.load(metadata.getFilePath());
+    }
+
+    public FileMetadata getMetadataPublic(String fileId) {
+        return fileMetadataRepository.findById(fileId)
+                .orElseThrow(() -> new RuntimeException("Archivo no encontrado con ID: " + fileId));
+    }
 }

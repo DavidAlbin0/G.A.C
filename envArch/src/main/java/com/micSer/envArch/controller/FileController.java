@@ -5,6 +5,7 @@ import com.micSer.envArch.model.User;
 import com.micSer.envArch.repository.UserRepository;
 import com.micSer.envArch.service.*;
 import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -200,6 +201,29 @@ public class FileController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + metadata.getFileName() + "\"")
                 .contentType(MediaType.parseMediaType(metadata.getContentType()))
+                .body(resource);
+    }
+
+    @GetMapping("/{id}/download")
+    @Operation(summary = "Descargar archivo binario crudo", description = "Descarga el flujo de bytes original del archivo sin requerir autenticación.")
+    @ApiResponse(responseCode = "200", description = "Flujo de bytes del archivo descargado")
+    @ApiResponse(responseCode = "404", description = "Archivo no encontrado")
+    public ResponseEntity<Resource> downloadFile(
+            @PathVariable("id") 
+            @Parameter(description = "ID del archivo a descargar") String id
+    ) {
+        FileMetadata metadata = downloadFileService.getMetadataPublic(id);
+        InputStream inputStream = downloadFileService.executePublic(id);
+        InputStreamResource resource = new InputStreamResource(inputStream);
+
+        String contentType = metadata.getContentType();
+        if (contentType == null || contentType.isBlank()) {
+            contentType = MediaType.APPLICATION_OCTET_STREAM_VALUE;
+        }
+
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + metadata.getFileName() + "\"")
+                .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
 }
