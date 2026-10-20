@@ -27,18 +27,52 @@ public class FileStorageService {
     public String store(InputStream inputStream, String fileName) {
         try {
             String cleanFileName = Paths.get(fileName).getFileName().toString();
+            String lowerName = cleanFileName.toLowerCase();
+            
+            // Subcarpeta según el tipo de archivo (en minúsculas para coincidir con el VPS)
+            Path subDir;
+            if (lowerName.matches(".*\\.(03|cre|isr|sub)$")) {
+                subDir = this.uploadPath.resolve("tarifas");
+            } else if (lowerName.matches(".*\\.(10|200|94)$")) {
+                subDir = this.uploadPath.resolve("indices");
+            } else if (lowerName.endsWith(".exe")) {
+                String appFolder = resolveAppFolder(lowerName);
+                subDir = this.uploadPath.resolve("aplicaciones").resolve(appFolder);
+            } else {
+                subDir = this.uploadPath;
+            }
+            
+            Files.createDirectories(subDir);
             String uniqueName = UUID.randomUUID().toString() + "_" + cleanFileName;
-            Path targetLocation = this.uploadPath.resolve(uniqueName);
+            Path targetLocation = subDir.resolve(uniqueName);
             
             if (!targetLocation.startsWith(this.uploadPath)) {
                 throw new RuntimeException("Intento de directory traversal detectado para el archivo: " + fileName);
             }
-
             Files.copy(inputStream, targetLocation, StandardCopyOption.REPLACE_EXISTING);
             return targetLocation.toString();
         } catch (IOException e) {
             throw new RuntimeException("Error al almacenar el archivo físicamente: " + fileName, e);
         }
+    }
+
+    private String resolveAppFolder(String lowerName) {
+        if (lowerName.contains("nomina")) {
+            return "NOMINA";
+        } else if (lowerName.contains("depre")) {
+            return "DEPRECIACION";
+        } else if (lowerName.contains("acumulado") || lowerName.contains("acunom")) {
+            return "ACUMULADO";
+        } else if (lowerName.contains("auxiliar")) {
+            return "AUXILIARES";
+        } else if (lowerName.contains("captura")) {
+            return "CAPTURA";
+        } else if (lowerName.contains("controlavc") || lowerName.contains("cltav")) {
+            return "CONTROLAVC";
+        }
+        int dotIndex = lowerName.lastIndexOf('.');
+        String baseName = (dotIndex > 0) ? lowerName.substring(0, dotIndex) : lowerName;
+        return baseName.toUpperCase();
     }
 
     public void delete(String filePath) {

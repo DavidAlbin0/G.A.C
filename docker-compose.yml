@@ -22,14 +22,14 @@ services:
     ports:
       - "127.0.0.1:10100:10100"
     environment:
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:29018/envarchdb
+      - SPRING_DATA_MONGODB_URI=${SPRING_DATA_MONGODB_URI:-mongodb://213.218.240.167:27018/actualizaciones}
       - PORT=10100
       - JWT_SECRET=9a2f64a13e5f2a1b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b
-      - UPLOAD_DIR=/app/uploads
+      - UPLOAD_DIR=${UPLOAD_DIR:-/var/www/archivosACT}
     depends_on:
       - mongodb
     volumes:
-      - backend_uploads:/app/uploads
+      - /var/www/archivosACT:/var/www/archivosACT
     networks:
       - app-network
 
