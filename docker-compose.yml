@@ -30,6 +30,7 @@ services:
       - mongodb
     volumes:
       - /var/www/archivosACT:/var/www/archivosACT
+      - /var/www/G.A.C/envArch/uploads:/var/www/G.A.C/envArch/uploads:ro
     networks:
       - app-network
 

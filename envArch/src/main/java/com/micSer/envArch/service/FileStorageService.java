@@ -88,13 +88,7 @@ public class FileStorageService {
 
     public InputStream load(String filePath) {
         try {
-            Path targetFile = Paths.get(filePath).toAbsolutePath().normalize();
-            
-            String fileName = targetFile.getFileName().toString();
-            Path localFile = this.uploadPath.resolve(fileName).toAbsolutePath().normalize();
-            if (Files.exists(localFile)) {
-                targetFile = localFile;
-            }
+            Path targetFile = resolveFilePath(filePath);
 
             if (targetFile.toString().contains("..")) {
                 throw new SecurityException("Intento de directory traversal detectado: " + filePath);
@@ -107,5 +101,42 @@ public class FileStorageService {
         } catch (IOException e) {
             throw new RuntimeException("Error al cargar el archivo físico: " + filePath, e);
         }
+    }
+
+    private Path resolveFilePath(String filePath) {
+        Path target = Paths.get(filePath).toAbsolutePath().normalize();
+        if (Files.exists(target)) {
+            return target;
+        }
+
+        String fileName = target.getFileName().toString();
+        Path candidate = this.uploadPath.resolve(fileName).toAbsolutePath().normalize();
+        if (Files.exists(candidate)) {
+            return candidate;
+        }
+
+        String[] subDirs = {"tarifas", "TARIFAS", "indices", "INDICES", "aplicaciones", "APLICACIONES"};
+        for (String sub : subDirs) {
+            Path p = this.uploadPath.resolve(sub).resolve(fileName).toAbsolutePath().normalize();
+            if (Files.exists(p)) {
+                return p;
+            }
+        }
+
+        try (var stream = Files.walk(this.uploadPath, 4)) {
+            var found = stream.filter(Files::isRegularFile)
+                    .filter(p -> {
+                        String name = p.getFileName().toString();
+                        return name.equalsIgnoreCase(fileName)
+                                || name.toLowerCase().endsWith("_" + fileName.toLowerCase());
+                    })
+                    .findFirst();
+            if (found.isPresent()) {
+                return found.get();
+            }
+        } catch (IOException ignored) {
+        }
+
+        return target;
     }
 }
