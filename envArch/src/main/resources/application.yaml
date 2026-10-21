@@ -3,7 +3,7 @@ spring:
     name: envArch
   data:
     mongodb:
-      uri: ${SPRING_DATA_MONGODB_URI:mongodb://213.218.240.167:27018/actualizaciones}
+      uri: ${SPRING_DATA_MONGODB_URI:mongodb://actualizador:tuPasswordSegura@213.218.240.167:27018/actualizaciones?authSource=admin}
 
 server:
   port: ${PORT:10100}

@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Document(collection = "file_metadata")
+@Document(collection = "files_metadata")
 public class FileMetadata {
     @Id
     private String id;
